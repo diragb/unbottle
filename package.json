@@ -1,7 +1,20 @@
 {
-  "name": "unbottle-webapp",
-  "version": "0.0.0",
-  "description": "",
+  "name": "unbottle",
+  "version": "0.1.0",
+  "description": "unbottle - anonymous diary service",
+  "author": "Dirag Biswas (https://github.com/diragb)",
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/diragb"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diragb/unbottle"
+  },
+  "bugs": {
+    "url": "https://github.com/diragb/unbottle/issues"
+  },
+  "homepage": "https://github.com/diragb/unbottle#readme",
   "scripts": {
     "start": "vite",
     "dev": "vite",
