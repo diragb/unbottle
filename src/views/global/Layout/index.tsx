@@ -31,18 +31,19 @@ const Layout: Component<{ children: (props: ILayoutProps) => JSXElement }> = (pr
   const goToRoute: TGoToRoute = async ({
     route,
     animationY,
-    animationMilliseconds
+    animationMilliseconds,
+    customAnimation
   }) => {
-    setWrapperAnimation(`${ riseAndFadeOut(animationY) } ${ animationMilliseconds ? (animationMilliseconds / 1000) : 0.5 }s ease`)
+    setWrapperAnimation(customAnimation ?? `${ riseAndFadeOut(animationY) } ${ animationMilliseconds ? (animationMilliseconds / 1000) : 0.5 }s ease`)
     await new Promise(resolve => setTimeout(resolve, animationMilliseconds ? animationMilliseconds : 500))
-    navigate(route, { replace: true, state: { prev: location.pathname } })
+    navigate(route, { state: { prev: location.pathname } })
   }
 
   // NOTE: WIP since there is no history.pop() alternative for SolidJS
-  const goBack = async (targetRoute?: string) => {
-    setWrapperAnimation(`${ riseAndFadeOut() } 0.5s ease`)
+  const goBack = async (targetRoute?: string, customAnimation?: string) => {
+    setWrapperAnimation(customAnimation ?? `${ riseAndFadeOut() } 0.5s ease`)
     await new Promise(resolve => setTimeout(resolve, 500))
-    navigate(targetRoute ?? ((location.state as { prev?: string }).prev ?? ROUTES.AUTH.HOME), { replace: true })
+    navigate(targetRoute ?? ((location.state as { prev?: string }).prev ?? ROUTES.AUTH.HOME))
   }
 
   // Return:

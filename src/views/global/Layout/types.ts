@@ -9,4 +9,5 @@ export type TGoToRoute = (props: {
   route: string
   animationY?: number
   animationMilliseconds?: number
+  customAnimation?: string
 }) => Promise<void>
