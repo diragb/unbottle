@@ -32,9 +32,11 @@ export const Buttons = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: row;
+  margin-bottom: -1rem;
 
   @media screen and (max-width: 768px) {
     margin-top: 0.25rem;
+    margin-bottom: 0rem;
     flex-direction: column;
   }
 `

@@ -54,9 +54,9 @@ const App: Component = () => {
         position
       })
       const userRef = doc(DATABASE.FIRESTORE, 'users', 'diragb')
-      updateDoc(userRef, {
-        ...position
-      })
+      // updateDoc(userRef, {
+      //   ...position
+      // })
     }
   })
 
@@ -65,9 +65,11 @@ const App: Component = () => {
     <Wrapper>
       <TopBar />
       <Routes>
+        <Route path={ ROUTES.AUTH.DIARY } element={ <Auth.Diary /> } />
         <Route path={ ROUTES.AUTH.HOME } element={ <Auth.Home /> } />
-        <Route path={ ROUTES.AUTH.WRITE } element={ <Auth.Write /> } data={ () => metadata } />
         <Route path={ ROUTES.AUTH.PUBLISH } element={ <Auth.Publish /> } />
+        <Route path={ `${ ROUTES.AUTH.READ }/:id` } element={ <Auth.Read /> } />
+        <Route path={ ROUTES.AUTH.WRITE } element={ <Auth.Write /> } data={ () => metadata } />
       </Routes>
     </Wrapper>
   )

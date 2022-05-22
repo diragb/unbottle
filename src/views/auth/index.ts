@@ -1,12 +1,16 @@
 // Imports:
+import Diary from './Diary'
 import Home from './Home'
-import Write from './Write'
 import Publish from './Publish'
+import Read from './Read'
+import Write from './Write'
 
 
 // Exports:
 export default {
+  Diary,
   Home,
-  Write,
-  Publish
+  Publish,
+  Read,
+  Write
 }

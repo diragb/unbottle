@@ -35,6 +35,7 @@ const Home: Component = ()  => {
               <Button text='make a diary entry' onClick={ () => layoutProps.goToRoute({ route: ROUTES.AUTH.WRITE }) } />
               <Button text={ `read others' entries` } notificationCount={ 5 } />
             </Buttons>
+            <Button text='check diary' onClick={ () => layoutProps.goToRoute({ route: ROUTES.AUTH.DIARY }) } />
           </Wrapper>
         )
       }
