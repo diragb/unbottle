@@ -30,6 +30,7 @@ const Layout: Component<{ children: (props: ILayoutProps) => JSXElement }> = (pr
   // Functions:
   const goToRoute: TGoToRoute = async ({
     route,
+    state,
     animationY,
     animationMilliseconds,
     customAnimation
@@ -43,7 +44,7 @@ const Layout: Component<{ children: (props: ILayoutProps) => JSXElement }> = (pr
   const goBack = async (targetRoute?: string, customAnimation?: string) => {
     setWrapperAnimation(customAnimation ?? `${ riseAndFadeOut() } 0.5s ease`)
     await new Promise(resolve => setTimeout(resolve, 500))
-    navigate(targetRoute ?? ((location.state as { prev?: string }).prev ?? ROUTES.AUTH.HOME))
+    navigate(targetRoute ?? ((location.state as { prev?: string })?.prev ?? ROUTES.AUTH.HOME))
   }
 
   // Return:

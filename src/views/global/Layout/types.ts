@@ -7,6 +7,7 @@ export interface ILayoutProps {
 
 export type TGoToRoute = (props: {
   route: string
+  state?: object
   animationY?: number
   animationMilliseconds?: number
   customAnimation?: string
