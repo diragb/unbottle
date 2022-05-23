@@ -1,5 +1,5 @@
 // Packages:
-import { Component } from 'solid-js'
+import { Component, JSX } from 'solid-js'
 import { styled } from 'solid-styled-components'
 
 
@@ -24,9 +24,15 @@ const Wrapper = styled.div`
 
 // Components:
 const GoBack: Component<{
-  goBack: () => Promise<void>
+  goBack: () => Promise<void>,
+  style?: string | JSX.CSSProperties
 }> = (props) => (
-  <Wrapper onClick={ props.goBack }><BiSolidChevronLeft size={'0.9rem'} style={{ margin: '0 -0.1rem -0.15rem 0' }} /> go back</Wrapper>
+  <Wrapper
+    onClick={ props.goBack }
+    style={ props.style }
+  >
+    <BiSolidChevronLeft size={'0.9rem'} style={{ margin: '0 -0.1rem -0.15rem 0' }} /> go back
+  </Wrapper>
 )
 
 
