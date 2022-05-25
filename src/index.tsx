@@ -31,6 +31,12 @@ const GlobalStyle = createGlobalStyles`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  a {
+    font-weight: 600;
+    text-decoration: none;
+    color: #B4654A;
+  }
 `
 
 

@@ -16,3 +16,9 @@ export const riseAndFadeOut = (y?: number) => keyframes`
     transform: translateY(${ y ?? -10 }rem);
   }
 `
+
+export const rotate = keyframes`
+  100% { 
+    transform:rotate(360deg); 
+  }
+`

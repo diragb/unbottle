@@ -2,8 +2,16 @@
 import { DEGREE_METRIC_EQUIVALENT } from '../constants/geo'
 
 
+// Typescript:
+export interface IMinMax { min: number, max: number }
+
+export interface ICoordMinMax { lat: IMinMax, long: IMinMax }
+
+export interface ICoordNumber { lat: number, long: number }
+
+
 // Exports:
-export const getLatitudeRange = (metric: number, distance: number): { min: number, max: number } => {
+export const getLatitudeRange = (metric: number, distance: number): IMinMax => {
   const degrees = distance / DEGREE_METRIC_EQUIVALENT
   let [ min, max ] = [ metric - degrees, metric + degrees ]
   let isMinOverflow = false
@@ -18,7 +26,7 @@ export const getLatitudeRange = (metric: number, distance: number): { min: numbe
   return { min: Math.max(min, -90), max }
 }
 
-export const getLongitudeRange = (lat: number, long: number, distance: number): { min: number, max: number }  => {
+export const getLongitudeRange = (lat: number, long: number, distance: number): IMinMax  => {
   const degrees = distance / (DEGREE_METRIC_EQUIVALENT * Math.cos(lat * (Math.PI / 180)))
   let [ min, max ] = [ long - degrees, long + degrees ]
   let isMinOverflow = false
@@ -33,7 +41,7 @@ export const getLongitudeRange = (lat: number, long: number, distance: number): 
   return { min: Math.max(min, -180), max }
 }
 
-export const dequadrantizeRange = ({ lat, long }: { lat: { max: number, min: number }, long: { max: number, min: number } }) => ({
+export const dequadrantizeRange = ({ lat, long }: ICoordMinMax) => ({
   lat: {
     max: lat.max + 90,
     min: lat.min + 90
@@ -44,12 +52,18 @@ export const dequadrantizeRange = ({ lat, long }: { lat: { max: number, min: num
   }
 })
 
-export const dequadrantizePoint = ({ lat, long }: { lat: number, long: number }) => ({
+export const dequadrantizePoint = ({ lat, long }: ICoordNumber) => ({
   lat: lat + 90,
   long: long + 180
 })
 
-export const linearRange = ({ lat, long }: { lat: { max: number, min: number }, long: { max: number, min: number } }) => ({
+export const linearRange = ({ lat, long }: ICoordMinMax) => ({
   max: long.max * lat.max,
   min: long.min * lat.min
 })
+
+export const distanceBetweenTwoPoints = (a: ICoordNumber, b: ICoordNumber, options?: {
+  round?: number
+}) => (
+  parseFloat((Math.sqrt(((a.lat - b.lat) ** 2) + ((a.long - b.long) ** 2))).toFixed(options?.round ?? 2))
+)

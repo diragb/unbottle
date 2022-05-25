@@ -26,6 +26,7 @@ export const NotificationBubble = styled.div`
 `
 
 export const Wrapper = styled.div<{
+  isDisabled: boolean
   backgroundColor?: string
   hoverBackgroundColor?: string
   activeBackgroundColor?: string
@@ -40,19 +41,19 @@ export const Wrapper = styled.div<{
   color: #746153;
   font-weight: 700;
   font-size: 1rem;
-  background-color: ${ props => props.backgroundColor ?? '#F7D4BC' };
+  background-color: ${ props => props.isDisabled ? '#ECECEC' : (props.backgroundColor ?? '#F7D4BC') };
   border-radius: 8px;
   animation: ${ fadeIn(2) } 0.5s ease;
   user-select: none;
-  cursor: pointer;
+  cursor: ${ props => props.isDisabled ? 'default' : 'pointer' };
   transition: all 0.25s ease;
 
   &:hover {
-    background-color: ${ props => props.hoverBackgroundColor ?? '#FCE1CF' };
+    background-color: ${ props => props.isDisabled ? '#ECECEC' : (props.hoverBackgroundColor ?? '#FCE1CF') };
   }
 
   &:active {  
-    background-color: ${ props => props.activeBackgroundColor ?? '#F1C7AA' };
+    background-color: ${ props => props.isDisabled ? '#ECECEC' : (props.activeBackgroundColor ?? '#F1C7AA') };
   }
 
   @media screen and (max-width: 768px) {

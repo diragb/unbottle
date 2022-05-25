@@ -6,27 +6,54 @@ import {
   Show,
   onMount
 } from 'solid-js'
-import { useRouteData } from 'solid-app-router'
+import { useNavigate, useRouteData } from 'solid-app-router'
 import { nanoid } from 'nanoid'
 import Sentiment from 'sentiment'
 import createLocalStore from '../../../utils/createLocalStore'
+import {
+  dequadrantizePoint,
+  dequadrantizeRange,
+  getLatitudeRange,
+  getLongitudeRange,
+  linearRange
+} from '../../../utils/geo'
+import {
+  doc,
+  increment,
+  setDoc,
+  Timestamp
+} from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+import {
+  updateFirestoreUser
+} from '../../../firebase/utils'
+import sha256 from 'crypto-js/sha256'
+import Base64 from 'crypto-js/enc-base64'
 
 
 // Typescript:
-import { IEntry, IMetadata } from '../../../ts/state'
+import {
+  IEntry,
+  ILocalStorageEntry,
+  IMetadata,
+  IMood,
+  IPreviewEntry
+} from '../../../ts/state'
 import { ILayoutProps, TGoToRoute } from '../../global/Layout/types'
 
 
 // Constants:
 import { MAX_DISTANCE } from '../../../constants/geo'
 import ROUTES from '../../../routes'
+import { DATABASE } from '../../../firebase'
 
 
 // Components:
 import Layout from '../../global/Layout'
 import GoBack from '../../../components/global/GoBack'
-import MoodPicker, { IMood } from '../../../components/global/MoodPicker'
+import MoodPicker from '../../../components/global/MoodPicker'
 import Button from '../../../components/global/Button'
+import { Input } from '../../../styles/components'
 
 
 // Styles:
@@ -34,21 +61,18 @@ import {
   Wrapper,
   Section,
   Title,
-  Input,
   Editor,
   Distance,
   DistanceField,
   Buttons
 } from './styles'
-import { dequadrantizeRange, getLatitudeRange, getLongitudeRange, linearRange } from '../../../utils/geo'
-import { doc, setDoc, Timestamp } from 'firebase/firestore'
-import { DATABASE } from '../../../firebase'
 
 
 // Functions:
 const Write: Component = () => {
   // Constants:
-  const DEFAULT_ENTRY: IEntry = {
+  const auth = getAuth()
+  const DEFAULT_ENTRY: ILocalStorageEntry = {
     id: '',
     stage: 0,
     mood: undefined,
@@ -56,13 +80,16 @@ const Write: Component = () => {
 		body: '',
     distance: '100',
     sentiment: 0,
-    range: { min: 0, max: 0 }
+    range: { min: 0, max: 0 },
+    hearts: 0,
+    comments: 0
   }
   const metadata: IMetadata = useRouteData()
   const sentiment = new Sentiment()
+  const navigate = useNavigate()
 
   // Signals:
-  const [ entry, setEntry ] = createLocalStore<IEntry>('entry', DEFAULT_ENTRY)
+  const [ entry, setEntry ] = createLocalStore<ILocalStorageEntry>('entry', DEFAULT_ENTRY)
   const [ stage, setStage ] = createSignal(entry.stage)
   const [ vignetteColor, setVignetteColor ] = createSignal('#FFFFFF')
   const [ isVignetteActive, setIsVignetteActive ] = createSignal(false)
@@ -70,6 +97,7 @@ const Write: Component = () => {
   const [ title, setTitle ] = createSignal(entry.title)
   const [ body, setBody ] = createSignal(entry.body)
   const [ distance, setDistance ] = createSignal(entry.distance)
+  const [ isSubmitting, setIsSubmitting ] = createSignal(false)
 
 
   // Functions:
@@ -107,23 +135,35 @@ const Write: Component = () => {
   }
 
   const publishToDatabase = async () => {
-    const userEntriesRef = doc(DATABASE.FIRESTORE, 'users', 'diragb', 'entries', entry.id)
-    await setDoc(userEntriesRef, {
+    if (!auth.currentUser || !auth.currentUser.uid) return
+    const userEntriesRef = doc(DATABASE.FIRESTORE, 'users', auth.currentUser.uid, 'entries', entry.id)
+    const previewEntry: IPreviewEntry = {
       id: entry.id,
       title: entry.title.substring(0, 500),
-      body: entry.body.substring(0, 50),
-      time: Timestamp.now()
-    })
-    const entriesRef = doc(DATABASE.FIRESTORE, 'entries', entry.id) 
-    await setDoc(entriesRef, {
+      body: entry.body.substring(0, 150),
+      time: Timestamp.now(),
+      hearts: 0,
+      comments: 0
+    }
+    const entriesRef = doc(DATABASE.FIRESTORE, 'entries', entry.id)
+    const fullEntry: IEntry = {
       id: entry.id,
-      mood: entry.mood,
+      mood: entry.mood as IMood,
       title: entry.title.substring(0, 500),
-      body: entry.body.substring(0, 10000),
+      body: entry.body.substring(0, 10000).replace(/\r?\n|\r/g, '<br />'),
       distance: entry.distance,
       sentiment: entry.sentiment,
       range: entry.range,
-      time: Timestamp.now()
+      time: Timestamp.now(),
+      hearts: 0,
+      comments: 0,
+      position: metadata.position,
+      signature: Base64.stringify(sha256(auth.currentUser.uid))
+    }
+    await setDoc(userEntriesRef, previewEntry)
+    await setDoc(entriesRef, fullEntry)
+    await updateFirestoreUser({
+      entries: increment(1)
     })
   }
 
@@ -134,6 +174,7 @@ const Write: Component = () => {
       title().trim().length === 0 ||
       body().trim().length === 0
     ) return
+    setIsSubmitting(true)
     setEntry({
       id: nanoid(),
       sentiment: sentiment.analyze(body()).score
@@ -141,27 +182,33 @@ const Write: Component = () => {
     setEntry({
       range: linearRange(dequadrantizeRange({
         lat: getLatitudeRange(
-          metadata.position.latitude,
+          metadata.position.lat,
           parseInt(distance())
         ),
         long: getLongitudeRange(
-          metadata.position.latitude,
-          metadata.position.longitude,
+          metadata.position.lat,
+          metadata.position.long,
           parseInt(distance())
         )
-      }))
+      })),
+      position: dequadrantizePoint(metadata.position)
     })
     await publishToDatabase()
+    setIsSubmitting(false)
     clearAllFields()
     setEntry({
       id: '',
       sentiment: 0,
       range: { min: 0, max: 0 },
     })
+    goToRoute({
+      route: ROUTES.AUTH.DIARY
+    })
   }
 
   // Effects:
   onMount(() => {
+    if (!auth.currentUser) navigate(ROUTES.PUBLIC.LANDING)
     if (entry.stage > 0) if (
       !entry.mood && entry.title === '' && entry.body === '' && entry.distance === '100'
     ) setStage(0)
@@ -237,9 +284,10 @@ const Write: Component = () => {
               /> km away from you can see this entry</Distance>
               <Buttons>
                 <Button
-                  text='save and publish anonymously'
+                  text={ isSubmitting() ? 'submitting..' : 'save and publish anonymously' }
                   style={{ width: 'fit-content', 'margin-left': '0' }}
                   onClick={ () => handlePublish(layoutProps.goToRoute) }
+                  isDisabled={ isSubmitting() }
                 />
                 <Button
                   text='reset all fields'

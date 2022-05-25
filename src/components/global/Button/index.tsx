@@ -1,5 +1,9 @@
 // Packages:
-import { Component, Show, JSX } from 'solid-js'
+import {
+  Component,
+  Show,
+  JSX
+} from 'solid-js'
 
 
 // Styles:
@@ -11,21 +15,23 @@ import {
 
 // Functions:
 const Button: Component<{
-  text: string,
-  backgroundColor?: string,
-  hoverBackgroundColor?: string,
-  activeBackgroundColor?: string,
-  notificationCount?: number,
-  style?: string | JSX.CSSProperties,
+  text: string
+  isDisabled?: boolean
+  backgroundColor?: string
+  hoverBackgroundColor?: string
+  activeBackgroundColor?: string
+  notificationCount?: string | number
+  style?: string | JSX.CSSProperties
   onClick?: () => void
-}> = (props) => {
+}> = props => {
   return (
     <Wrapper
+      isDisabled={ props.isDisabled ?? false }
       backgroundColor={ props.backgroundColor }
       hoverBackgroundColor={ props.hoverBackgroundColor }
       activeBackgroundColor={ props.activeBackgroundColor }
       style={ props.style }
-      onClick={ props.onClick }
+      onClick={ props.isDisabled ? () => {} : props.onClick }
     >
       <Show when={ props.notificationCount }>
         <NotificationBubble>{ props.notificationCount }</NotificationBubble>

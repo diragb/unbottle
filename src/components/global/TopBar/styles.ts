@@ -10,5 +10,5 @@ export const Wrapper = styled.div`
   width: 100vw;
   height: 1rem;
   padding: 0.5rem;
-  background-color: grey;
+  /* background-color: grey; */
 `

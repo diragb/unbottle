@@ -1,14 +1,13 @@
 // Exports:
 export default {
   AUTH: {
-    HOME: '/',
+    HOME: '/home',
     WRITE: '/write',
-    PUBLISH: '/publish',
     READ: '/read',
     DIARY: '/diary'
   },
   PUBLIC: {
     LANDING: '/',
-    LOGIN: '/login'
+    SETUP: '/setup'
   }
 }

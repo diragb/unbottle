@@ -3,11 +3,7 @@ import { Component, For } from 'solid-js'
 
 
 // Typescript:
-export interface IMood {
-  icon: string
-  name: string
-  color: string
-}
+import { IMood } from '../../../ts/state'
 
 
 // Imports:

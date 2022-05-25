@@ -1,5 +1,9 @@
 // Packages:
-import { createStore, SetStoreFunction, Store } from 'solid-js/store'
+import {
+	createStore,
+	SetStoreFunction,
+	Store
+} from 'solid-js/store'
 import { createEffect } from 'solid-js'
 
 

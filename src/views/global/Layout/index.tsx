@@ -37,7 +37,7 @@ const Layout: Component<{ children: (props: ILayoutProps) => JSXElement }> = (pr
   }) => {
     setWrapperAnimation(customAnimation ?? `${ riseAndFadeOut(animationY) } ${ animationMilliseconds ? (animationMilliseconds / 1000) : 0.5 }s ease`)
     await new Promise(resolve => setTimeout(resolve, animationMilliseconds ? animationMilliseconds : 500))
-    navigate(route, { state: { prev: location.pathname } })
+    navigate(route, { state: { prev: location.pathname, ...state } })
   }
 
   // NOTE: WIP since there is no history.pop() alternative for SolidJS

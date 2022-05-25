@@ -1,10 +1,20 @@
 // Packages:
-import { Component, createSignal, createEffect, Show, onMount } from 'solid-js'
-import { styled } from 'solid-styled-components'
+import {
+  Component,
+  createSignal,
+  onMount,
+  For,
+  Switch,
+  Match
+} from 'solid-js'
+import { firestoreTimeToReadable, getUserDiary } from '../../../firebase/utils'
+import { getAuth } from 'firebase/auth'
+import { useNavigate } from 'solid-app-router'
 
 
 // Typescript:
 import { ILayoutProps } from '../../global/Layout/types'
+import { IPreviewEntry } from '../../../ts/state'
 
 
 // Constants:
@@ -15,140 +25,78 @@ import ROUTES from '../../../routes'
 import Layout from '../../global/Layout'
 import GoBack from '../../../components/global/GoBack'
 import EntryBlob from '../../../components/views/Diary/EntryBlob'
+import Error from '../../../components/global/Error'
 
 
 // Styles:
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: calc(100vw - 8rem);
-  min-height: calc(100vh - 8rem);
-  padding: 4rem;
-  transition: all 1s ease;
-
-  @media screen and (min-width: 470px) and (max-width: 911px) {
-    width: calc(100vw - 8rem);
-  }
-
-  @media screen and (max-width: 470px) {
-    width: calc(100vw - 4rem);
-    padding: 2rem;
-  }
-`
-
-const Entries = styled.div`
-  display: flex;
-  align-content: flex-start;
-  flex-flow: row wrap;
-  width: calc(100% + 2rem);
-  height: 100%;
-  margin-left: -1rem;
-  transition: all 0.25s ease;
-
-  @media screen and (max-width: 911px) {
-    align-content: unset;
-    flex-flow: unset;
-    align-items: center;
-    flex-direction: column;
-  }
-`
+import {
+  Wrapper,
+  ErrorSection,
+  Entries
+} from './styles'
 
 
 // Components:
 const Diary: Component = () => {
+  // Constants:
+  const auth = getAuth()
+  const navigate = useNavigate()
+
+  // Signals:
+  const [ entries, setEntries ] = createSignal<IPreviewEntry[]>([])
+  const [ noEntries, setNoEntries ] = createSignal(false)
+
+  // Effects:
+  onMount(async () => {
+    if (!auth.currentUser) navigate(ROUTES.PUBLIC.LANDING)
+    const fetchedEntries = await getUserDiary()
+    setEntries(fetchedEntries)
+    setNoEntries(fetchedEntries.length === 0)
+  })
+
   // Return:
   return (
     <Layout>
       {
         (layoutProps: ILayoutProps) => (
           <Wrapper style={{ animation: layoutProps.wrapperAnimation() }}>
-            <GoBack goBack={ () => layoutProps.goBack(ROUTES.AUTH.HOME) } />
-            <Entries>
-              <EntryBlob
-                title='a day full of epiphanies'
-                time='21st May, 2022 9:34 PM'
-                body={ `Well damn. Your words were definitely read by at least me. I'm 19, so I couldn't personally relate to a lot of your experiences, but some of those experiences are instead fears I have for the future. I chose my major based on the same parameters as you and now I just don't know if I'll be happy with just..` }
-                hearts={ 0 }
-                comments={ 0 }
-                navigate={
-                  () => layoutProps.goToRoute({
-                    route: `${ ROUTES.AUTH.READ }/${ 'wfa35vg4' }`
-                  })
-                }
-              />
-              <EntryBlob
-                title='a day full of epiphanies'
-                time='21st May, 2022 9:34 PM'
-                body={ `Well damn. Your words were definitely read by at least me. I'm 19, so I couldn't personally relate to a lot of your experiences, but some of those experiences are instead fears I have for the future. I chose my major based on the same parameters as you and now I just don't know if I'll be happy with just..` }
-                hearts={ 0 }
-                comments={ 0 }
-                navigate={
-                  () => layoutProps.goToRoute({
-                    route: `${ ROUTES.AUTH.READ }/${ 'wfa35vg4' }`
-                  })
-                }
-              />
-              <EntryBlob
-                title='a day full of epiphanies'
-                time='21st May, 2022 9:34 PM'
-                body={ `Well damn. Your words were definitely read by at least me. I'm 19, so I couldn't personally relate to a lot of your experiences, but some of those experiences are instead fears I have for the future. I chose my major based on the same parameters as you and now I just don't know if I'll be happy with just..` }
-                hearts={ 0 }
-                comments={ 0 }
-                navigate={
-                  () => layoutProps.goToRoute({
-                    route: `${ ROUTES.AUTH.READ }/${ 'wfa35vg4' }`
-                  })
-                }
-              />
-              <EntryBlob
-                title='a day full of epiphanies'
-                time='21st May, 2022 9:34 PM'
-                body={ `Well damn. Your words were definitely read by at least me. I'm 19, so I couldn't personally relate to a lot of your experiences, but some of those experiences are instead fears I have for the future. I chose my major based on the same parameters as you and now I just don't know if I'll be happy with just..` }
-                hearts={ 0 }
-                comments={ 0 }
-                navigate={
-                  () => layoutProps.goToRoute({
-                    route: `${ ROUTES.AUTH.READ }/${ 'wfa35vg4' }`
-                  })
-                }
-              />
-              <EntryBlob
-                title='a day full of epiphanies'
-                time='21st May, 2022 9:34 PM'
-                body={ `Well damn. Your words were definitely read by at least me. I'm 19, so I couldn't personally relate to a lot of your experiences, but some of those experiences are instead fears I have for the future. I chose my major based on the same parameters as you and now I just don't know if I'll be happy with just..` }
-                hearts={ 0 }
-                comments={ 0 }
-                navigate={
-                  () => layoutProps.goToRoute({
-                    route: `${ ROUTES.AUTH.READ }/${ 'wfa35vg4' }`
-                  })
-                }
-              />
-              <EntryBlob
-                title='a day full of epiphanies'
-                time='21st May, 2022 9:34 PM'
-                body={ `Well damn. Your words were definitely read by at least me. I'm 19, so I couldn't personally relate to a lot of your experiences, but some of those experiences are instead fears I have for the future. I chose my major based on the same parameters as you and now I just don't know if I'll be happy with just..` }
-                hearts={ 0 }
-                comments={ 0 }
-                navigate={
-                  () => layoutProps.goToRoute({
-                    route: `${ ROUTES.AUTH.READ }/${ 'wfa35vg4' }`
-                  })
-                }
-              />
-              <EntryBlob
-                title='a day full of epiphanies'
-                time='21st May, 2022 9:34 PM'
-                body={ `Well damn. Your words were definitely read by at least me. I'm 19, so I couldn't personally relate to a lot of your experiences, but some of those experiences are instead fears I have for the future. I chose my major based on the same parameters as you and now I just don't know if I'll be happy with just..` }
-                hearts={ 0 }
-                comments={ 0 }
-                navigate={
-                  () => layoutProps.goToRoute({
-                    route: `${ ROUTES.AUTH.READ }/${ 'wfa35vg4' }`
-                  })
-                }
-              />
-            </Entries>
+            <GoBack goBack={ () => layoutProps.goBack(ROUTES.AUTH.HOME) } style={{ position: noEntries() ? 'absolute' : 'initial', 'z-index': 1 }} />
+            <Switch>
+              <Match when={ noEntries() }>
+                <ErrorSection>
+                  <Error
+                    errorText='no diary entries found 🫤'
+                    errorDescription='write an entry? how did your day go? 😅'
+                    action={{
+                      text: 'write an entry',
+                      do: () => layoutProps.goToRoute({ route: ROUTES.AUTH.WRITE, state: { prev: ROUTES.AUTH.DIARY } })
+                    }}
+                  />
+                </ErrorSection>
+              </Match>
+              <Match when={ entries().length > 0 }>
+                <Entries>
+                  <For each={ entries() }>
+                    {
+                      entry => (
+                        <EntryBlob
+                          title={ entry.title }
+                          time={ firestoreTimeToReadable(entry?.time.seconds) }
+                          body={ entry.body }
+                          hearts={ entry.hearts }
+                          comments={ entry.comments }
+                          navigate={
+                            () => layoutProps.goToRoute({
+                              route: `${ ROUTES.AUTH.READ }/${ entry.id }`
+                            })
+                          }
+                        />
+                      )
+                    }
+                  </For>
+                </Entries>
+              </Match>
+            </Switch>
           </Wrapper>
         )
       }
