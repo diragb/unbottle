@@ -12,7 +12,8 @@ import { fadeIn } from '../../../styles/animations'
 
 const Wrapper = styled.div`
   width: fit-content;
-  margin-bottom: 1rem;
+  margin: -0.5rem -0.5rem 0rem -0.5rem;
+  padding: 0.5rem;
   font-weight: 600;
   font-size: 1rem;
   color: #A5402D;
