@@ -103,7 +103,7 @@ const Landing: Component = () => {
           >
             <Error
               errorText='thanks for checking me out 🥺'
-              errorDescription={ <>unbottle will be in its alpha phase till may 31st, 2022<br />please report bugs at <a href='https://instagram.com/unbottle.app' target='_blank'>@unbottle.app</a> on instagram 😊</> }
+              errorDescription={ <>unbottle will be in its alpha phase till may 31st, 2022<br />please report bugs at <a href='https://instagram.com/unbottle.app' target='_blank'>@unbottle.app</a> on instagram ❤️</> }
               action={{
                 do: metadata.isSigningIn ? () => {} : (!metadata.isSignedIn ? signIn : () => layoutProps.goToRoute({ route: ROUTES.AUTH.HOME })),
                 text: metadata.isSigningIn ? 'verifying login..' : (!metadata.isSignedIn ? 'sign in?' : 'go to app')
