@@ -50,10 +50,13 @@ const App: Component = () => {
       navigator.geolocation.getCurrentPosition(p => resolve({
         lat: p.coords.latitude,
         long: p.coords.longitude
-      }), () => resolve({
-        lat: 0,
-        long: 0
-      }))
+      }), (e) => {
+        alert(`⚠️ unable to fetch location ⚠️: ${ JSON.stringify(e) }`)
+        resolve({
+          lat: 0,
+          long: 0
+        })
+      })
     })
     const userUpdateObject: Partial<IUser> = {
       lastSeen: Timestamp.now()
