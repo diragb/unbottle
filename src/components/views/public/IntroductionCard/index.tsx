@@ -41,7 +41,7 @@ const IntroductionCard: Component<{
           thanks for checking out unbottle! ❤️
           <br />
           <br />
-          unbottle helps you, quite literally, unbottle your feelings
+          unbottle helps you to, quite literally, unbottle your feelings
           <br />
           <br />
           no matter what you are going through, there will always be someone out here who will listen to you
