@@ -4,6 +4,7 @@ import { THEME } from '../../../styles/theme'
 
 // Exports:
 export interface IWrapperProps {
-  isDisabled: boolean,
+  isDisabled: boolean
   currentTheme: THEME
+  shouldAnimate?: boolean
 }

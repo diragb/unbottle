@@ -33,7 +33,7 @@ import ThemeBubble from './components/global/ThemeBubble'
 const GlobalStyle = createGlobalStyles`
   body {
     margin: 0;
-    font-family:'Nunito Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    font-family: 'Nunito Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -79,7 +79,7 @@ const Wrapper = styled.div<{
 const App: Component = () => {
   // Signals:
   const [ metadata, setMetadata ] = createLocalStore<IMetadata>('metadata', {
-    theme: THEME.PINK,
+    theme: THEME.LIGHT,
     isSigningIn: false,
     isSignedIn: false,
     position: {
@@ -87,13 +87,18 @@ const App: Component = () => {
       long: 0
     },
     entriesRead: [],
-    lastSeen: Timestamp.now()
+    lastSeen: Timestamp.now(),
+    didShowIntroductionCard: false,
+    permissions: {
+      cookies: true,
+      location: false
+    }
 	})
   const [ fontColor, setFontColor ] = createSignal(generateFontColor(metadata.theme))
 
   // Effects:
   onMount(async () => {
-    const position: IPosition = await new Promise(resolve => {
+    const position: IPosition = metadata.permissions.location ? await new Promise(resolve => {
       navigator.geolocation.getCurrentPosition(p => resolve({
         lat: p.coords.latitude,
         long: p.coords.longitude
@@ -104,7 +109,7 @@ const App: Component = () => {
           long: 0
         })
       })
-    })
+    }) : { lat: 0, long: 0 }
     // TODO: Throttle lastSeen to 1 minute ranges
     const userUpdateObject: Partial<IUser> = {}
     const currentTimestamp = Timestamp.now()

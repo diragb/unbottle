@@ -46,6 +46,11 @@ export interface IPreviewEntry {
   comments: number
 }
 
+export interface IPermissions {
+  cookies: boolean,
+  location: boolean
+}
+
 export interface IMetadata {
   theme: THEME
   isSigningIn: boolean
@@ -53,6 +58,8 @@ export interface IMetadata {
   position: IPosition
   entriesRead: string[]
   lastSeen: Timestamp
+  didShowIntroductionCard: boolean
+  permissions: IPermissions
 }
 
 export interface IUser {

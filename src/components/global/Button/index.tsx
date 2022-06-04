@@ -22,6 +22,7 @@ const Button: Component<{
   text: string
   theme: THEME 
   isDisabled?: boolean
+  shouldAnimate?: boolean
   notificationCount?: string | number
   style?: string | JSX.CSSProperties
   onClick?: () => void
@@ -29,6 +30,7 @@ const Button: Component<{
   return (
     <Wrapper
       isDisabled={ props.isDisabled ?? false }
+      shouldAnimate={ props.shouldAnimate ?? true }
       currentTheme={ props.theme }
       style={ props.style }
       onClick={ props.isDisabled ? () => {} : props.onClick }

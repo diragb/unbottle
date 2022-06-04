@@ -108,7 +108,7 @@ export const Wrapper = styled.div<IWrapperProps>`
     ) :
     'unset'
   };
-  animation: ${ fadeIn(2) } 0.5s ease;
+  animation: ${ props => props.shouldAnimate ? `${ fadeIn(2) } 0.5s ease` : '' };
   user-select: none;
   cursor: ${ props => props.isDisabled ? 'default' : 'pointer' };
   transition: all 0.25s ease;
