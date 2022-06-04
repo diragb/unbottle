@@ -71,7 +71,7 @@ const Setup: Component = () => {
       ) navigate(ROUTES.AUTH.HOME, { state: { prev: ROUTES.PUBLIC.LANDING } })
       else {
         await updateProfile(auth.currentUser, {
-          displayName: username()
+          displayName: username().toLowerCase()
         })
       }
     }
@@ -81,12 +81,12 @@ const Setup: Component = () => {
   const handleUserSetup = async (goToRoute: TGoToRoute) => {
     setLoading(true)
     if (!auth.currentUser) return
-    if (await isUsernameTaken(username())) setErrorText('username already taken 🫤')
+    if (await isUsernameTaken(username().toLowerCase())) setErrorText('username already taken 🫤')
     await updateProfile(auth.currentUser, {
-      displayName: username()
+      displayName: username().toLowerCase()
     })
     updateFirestoreUser({
-      username: username()
+      username: username().toLowerCase()
     })
     setLoading(false)
     goToRoute({
@@ -109,7 +109,7 @@ const Setup: Component = () => {
                 <Input
                   type='text'
                   placeholder='username'
-                  value={ username() }
+                  value={ username().toLowerCase() }
                   style={{
                     'min-width': '25vw',
                     'margin-top': 0,
