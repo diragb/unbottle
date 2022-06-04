@@ -2,8 +2,12 @@
 import { styled } from 'solid-styled-components'
 
 
+// Imports:
+import { AiOutlineLoading } from 'solid-icons/ai'
+
+
 // Styles:
-import { fadeIn } from './animations'
+import { fadeIn, rotate } from './animations'
 
 
 // Exports:
@@ -27,4 +31,8 @@ export const Input = styled.input`
   @media screen and (max-width: 768px) {
     min-width: calc(100vw - 4.5rem);
   }
+`
+
+export const LoadingIcon = styled(AiOutlineLoading)`
+  animation: ${ rotate } 1s linear infinite;
 `

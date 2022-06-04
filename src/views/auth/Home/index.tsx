@@ -1,10 +1,11 @@
 // Packages:
 import { Component, onMount } from 'solid-js'
 import { getAuth } from 'firebase/auth'
-import { useNavigate } from 'solid-app-router'
+import { useNavigate, useRouteData } from 'solid-app-router'
 
 
 // Typescript:
+import { IMetadata } from '../../../ts/state'
 import { ILayoutProps } from '../../global/Layout/types'
 
 
@@ -30,6 +31,7 @@ const Home: Component = ()  => {
   // Constants:
   const auth = getAuth()
   const navigate = useNavigate()
+  const metadata: IMetadata = useRouteData()
 
   // Effects:
   onMount(() => {
@@ -45,6 +47,7 @@ const Home: Component = ()  => {
             <Title>hey, how was your day?</Title>
             <Buttons>
               <Button
+                theme={ metadata.theme }
                 text='make a diary entry'
                 onClick={
                   () => layoutProps.goToRoute({
@@ -53,6 +56,7 @@ const Home: Component = ()  => {
                 }
               />
               <Button
+                theme={ metadata.theme }
                 text={ `read others' entries` }
                 notificationCount='5+'
                 onClick={
@@ -66,6 +70,7 @@ const Home: Component = ()  => {
               />
             </Buttons>
             <Button
+              theme={ metadata.theme }
               text='check diary'
               onClick={
                 () => layoutProps.goToRoute({

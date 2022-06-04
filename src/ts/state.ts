@@ -52,6 +52,7 @@ export interface IMetadata {
   isSignedIn: boolean
   position: IPosition
   entriesRead: string[]
+  lastSeen: Timestamp
 }
 
 export interface IUser {

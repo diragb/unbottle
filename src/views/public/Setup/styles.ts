@@ -28,13 +28,19 @@ export const Title = styled.div`
   margin-left: 0.25rem;
   font-weight: 700;
   font-size: 1.25rem;
-  color: #252D30;
   animation: ${ fadeIn(2) } 0.5s ease;
   user-select: none;
 
   @media screen and (max-width: 768px) {
     font-size: 1rem;
   }
+`
+
+export const InputArea = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.5rem;
 `
 
 export const ErrorText = styled.div`

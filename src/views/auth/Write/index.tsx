@@ -29,6 +29,7 @@ import {
 } from '../../../firebase/utils'
 import sha256 from 'crypto-js/sha256'
 import Base64 from 'crypto-js/enc-base64'
+import Color from 'color'
 
 
 // Typescript:
@@ -40,12 +41,14 @@ import {
   IPreviewEntry
 } from '../../../ts/state'
 import { ILayoutProps, TGoToRoute } from '../../global/Layout/types'
+import { THEME } from '../../../styles/theme'
 
 
 // Constants:
 import { MAX_DISTANCE } from '../../../constants/geo'
 import ROUTES from '../../../routes'
 import { DATABASE } from '../../../firebase'
+import COLORS from '../../../styles/color'
 
 
 // Components:
@@ -69,6 +72,40 @@ import {
 
 
 // Functions:
+const getFontColor = (condition: boolean, theme: THEME) => (
+  COLORS[ theme ] === COLORS.DARK ?
+  Color(COLORS.LIGHT).darken(0.25).hex() :
+  condition ?
+  (
+    Color(COLORS[ theme ], 'hex').isLight() ?
+    Color(COLORS[ theme ]).darken(0.75).hex() :
+    Color(COLORS[ theme ]).lighten(0.75).hex()
+  ) :
+  (
+    Color(COLORS[ theme ], 'hex').isLight() ?
+    Color(COLORS[ theme ]).darken(0.75).hex() :
+    Color(COLORS[ theme ]).darken(0.5).hex()
+  )
+)
+
+const getBackground = (condition: boolean, theme: THEME) => (
+  condition ?
+  COLORS[ theme ] === COLORS.DARK ?
+  Color(COLORS.LIGHT).darken(0.9).hex() :
+  (
+    Color(COLORS[ theme ], 'hex').isLight() ?
+    Color(COLORS[ theme ]).darken(0.1).hex() :
+    Color(COLORS[ theme ]).darken(0.4).hex()
+  ) :
+  COLORS[ theme ] === COLORS.DARK ?
+  Color(COLORS.LIGHT).darken(0.95).hex() :
+  (
+    Color(COLORS[ theme ], 'hex').isLight() ?
+    Color(COLORS[ theme ]).darken(0.05).hex() :
+    Color(COLORS[ theme ]).lighten(0.45).hex()
+  )
+)
+
 const Write: Component = () => {
   // Constants:
   const auth = getAuth()
@@ -91,14 +128,14 @@ const Write: Component = () => {
   // Signals:
   const [ entry, setEntry ] = createLocalStore<ILocalStorageEntry>('entry', DEFAULT_ENTRY)
   const [ stage, setStage ] = createSignal(entry.stage)
-  const [ vignetteColor, setVignetteColor ] = createSignal('#FFFFFF')
+  const [ vignetteColor, setVignetteColor ] = createSignal(COLORS[ metadata.theme ])
   const [ isVignetteActive, setIsVignetteActive ] = createSignal(false)
   const [ selectedMood, setSelectedMood ] = createSignal<IMood | undefined>(entry.mood)
   const [ title, setTitle ] = createSignal(entry.title)
   const [ body, setBody ] = createSignal(entry.body)
   const [ distance, setDistance ] = createSignal(entry.distance)
   const [ isSubmitting, setIsSubmitting ] = createSignal(false)
-
+  const [ canSubmit, setCanSubmit ] = createSignal(false)
 
   // Functions:
   const handleMoodSelect = (mood: IMood) => {
@@ -115,7 +152,7 @@ const Write: Component = () => {
   }
 
   const handleMoodOnMouseOut = () => {
-    setVignetteColor('#FFFFFF')
+    setVignetteColor(COLORS[ metadata.theme ])
     setIsVignetteActive(true)
   }
 
@@ -230,6 +267,20 @@ const Write: Component = () => {
   createEffect(() => {
     if (typeof distance() === 'string') setDistance(handleDistance(distance()))
   })
+
+  createEffect(() => {
+    setVignetteColor(COLORS[ metadata.theme ])
+  })
+
+  createEffect(() => {
+    if (
+      stage() < 3 ||
+      !selectedMood() ||
+      title().trim().length === 0 ||
+      body().trim().length === 0
+    ) setCanSubmit(true)
+    else setCanSubmit(false)
+  })
   
   // Return:
   return (
@@ -246,6 +297,7 @@ const Write: Component = () => {
               <Title>how was your mood today?</Title>
               <MoodPicker
                 selectedMood={ selectedMood() }
+                theme={ metadata.theme }
                 onClick={ handleMoodSelect }
                 onMouseOver={ handleMoodOnMouseOver }
                 onMouseOut={ handleMoodOnMouseOut }
@@ -259,7 +311,8 @@ const Write: Component = () => {
                   placeholder='start typing...'
                   value={ title() }
                   style={{
-                    background: title().trim().length === 0 ? '#FFEEEE' : '#ECECEC'
+                    color: getFontColor(title().trim().length === 0, metadata.theme),
+                    background: getBackground(title().trim().length === 0, metadata.theme)
                   }}
                   onKeyUp={ e => setTitle(e.currentTarget.value) }
                 />
@@ -271,7 +324,8 @@ const Write: Component = () => {
                 placeholder='there are a lot of things i need to get off of my chest...'
                 value={ body() }
                 style={{
-                  background: body().trim().length === 0 ? '#FFEEEE' : '#ECECEC'
+                  color: getFontColor(body().trim().length === 0, metadata.theme),
+                  background: getBackground(body().trim().length === 0, metadata.theme)
                 }}
                 onKeyUp={ e => setBody(e.currentTarget.value) }
               />
@@ -280,19 +334,28 @@ const Write: Component = () => {
               <Distance>only people living <DistanceField
                 type='text'
                 value={ distance() }
+                style={{
+                  color: getFontColor(distance().trim().length === 0, metadata.theme),
+                  background: getBackground(distance().trim().length === 0, metadata.theme)
+                }}
                 onInput={ e => setDistance(e.currentTarget.value) }
               /> km away from you can see this entry</Distance>
               <Buttons>
                 <Button
                   text={ isSubmitting() ? 'submitting..' : 'save and publish anonymously' }
+                  theme={ metadata.theme }
+                  isDisabled={ canSubmit() || isSubmitting() }
                   style={{ width: 'fit-content', 'margin-left': '0' }}
                   onClick={ () => handlePublish(layoutProps.goToRoute) }
-                  isDisabled={ isSubmitting() }
                 />
                 <Button
                   text='reset all fields'
-                  backgroundColor={ '#ECECEC' }
-                  style={{ width: 'fit-content', 'min-width': '1rem', 'margin-left': '0' }}
+                  theme={ metadata.theme }
+                  style={{
+                    'width': 'fit-content',
+                    'min-width': '1rem',
+                    'margin-left': '0'
+                  }}
                   onClick={ clearAllFields }
                 />
               </Buttons>

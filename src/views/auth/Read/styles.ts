@@ -2,13 +2,7 @@
 import { styled } from 'solid-styled-components'
 
 
-// Imports:
-import { AiOutlineLoading } from 'solid-icons/ai'
-
-
 // Styles:
-import { rotate } from '../../../styles/animations'
-
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -46,7 +40,3 @@ export const ErrorSection = styled.div`
 `
 
 export const LoadMore = styled.div``
-
-export const LoadingIcon = styled(AiOutlineLoading)`
-  animation: ${ rotate } 1s linear infinite;
-`

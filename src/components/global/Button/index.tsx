@@ -6,6 +6,10 @@ import {
 } from 'solid-js'
 
 
+// Typescript:
+import { THEME } from '../../../styles/theme'
+
+
 // Styles:
 import {
   Wrapper,
@@ -16,10 +20,8 @@ import {
 // Functions:
 const Button: Component<{
   text: string
+  theme: THEME 
   isDisabled?: boolean
-  backgroundColor?: string
-  hoverBackgroundColor?: string
-  activeBackgroundColor?: string
   notificationCount?: string | number
   style?: string | JSX.CSSProperties
   onClick?: () => void
@@ -27,9 +29,7 @@ const Button: Component<{
   return (
     <Wrapper
       isDisabled={ props.isDisabled ?? false }
-      backgroundColor={ props.backgroundColor }
-      hoverBackgroundColor={ props.hoverBackgroundColor }
-      activeBackgroundColor={ props.activeBackgroundColor }
+      currentTheme={ props.theme }
       style={ props.style }
       onClick={ props.isDisabled ? () => {} : props.onClick }
     >

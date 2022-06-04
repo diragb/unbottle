@@ -9,6 +9,8 @@ import { BiSolidChevronLeft } from 'solid-icons/bi'
 
 // Styles:
 import { fadeIn } from '../../../styles/animations'
+import Color from 'color'
+import COLORS from '../../../styles/color'
 
 const Wrapper = styled.div`
   width: fit-content;
@@ -16,7 +18,6 @@ const Wrapper = styled.div`
   padding: 0.5rem;
   font-weight: 600;
   font-size: 1rem;
-  color: #A5402D;
   user-select: none;
   animation: ${ fadeIn() } 0.5s ease;
   cursor: pointer;
@@ -26,7 +27,7 @@ const Wrapper = styled.div`
 // Components:
 const GoBack: Component<{
   goBack: () => Promise<void>,
-  style?: string | JSX.CSSProperties
+  style?: JSX.CSSProperties
 }> = (props) => (
   <Wrapper
     onClick={ props.goBack }
