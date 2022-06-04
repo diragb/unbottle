@@ -113,7 +113,8 @@ const Setup: Component = () => {
                   style={{
                     'min-width': '25vw',
                     'margin-top': 0,
-                    background: username().trim().length === 0 ? '#FFEEEE' : '#ECECEC'
+                    background: username().trim().length === 0 ? '#FFEEEE' : '#ECECEC',
+                    'text-transform': 'lowercase'
                   }}
                   autocomplete='off'
                   spellcheck={ false }
