@@ -47,7 +47,8 @@ import ROUTES from '../../../routes'
 import Layout from '../../global/Layout'
 import GoBack from '../../../components/global/GoBack'
 import Error from '../../../components/global/Error'
-import Entry from '../../../components/views/Diary/Read/Entry'
+import Entry from '../../../components/views/auth/Read/Entry'
+import { LoadingIcon } from '../../../styles/components'
 
 
 // Styles:
@@ -55,8 +56,7 @@ import {
   Wrapper,
   GoBackWrapper,
   ErrorSection,
-  LoadMore,
-  LoadingIcon
+  LoadMore
 } from './styles'
 
 
@@ -190,6 +190,7 @@ const Read: Component = () => {
                       text: 'write an entry',
                       do: () => layoutProps.goToRoute({ route: ROUTES.AUTH.WRITE, state: { prev: ROUTES.AUTH.READ } })
                     }}
+                    theme={ metadata.theme }
                   />
                 </ErrorSection>
               </Match>
@@ -211,7 +212,7 @@ const Read: Component = () => {
                   <Switch>
                     <Match when={ isFetching() && !noMoreEntries() }>
                       <div style={{ display: 'flex', 'justify-content': 'center', 'align-items': 'center', height: '75vh' }}>
-                        <LoadingIcon size={ 64 } color={ '#252D30' } />
+                        <LoadingIcon size={ 64 } />
                       </div>
                     </Match>
                     <Match when={ !isFetching() && noMoreEntries() }>
@@ -223,6 +224,7 @@ const Read: Component = () => {
                             text: 'write an entry',
                             do: () => layoutProps.goToRoute({ route: ROUTES.AUTH.WRITE, state: { prev: ROUTES.AUTH.READ } })
                           }}
+                          theme={ metadata.theme }
                         />
                       </div>
                     </Match>

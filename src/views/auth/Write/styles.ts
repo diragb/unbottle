@@ -15,7 +15,7 @@ export const Wrapper = styled.div<{
   height: calc(100vh - 8rem);
   padding: 4rem;
   box-shadow: inset 0 0 ${ props => props.isVignetteActive ? '150px' : 0 } -50px ${ props => props.vignetteColor };
-  transition: all 1s ease;
+  transition: box-shadow 1s ease;
 
   @media screen and (max-width: 768px) {
     width: calc(100vw - 3rem);
@@ -82,6 +82,7 @@ export const DistanceField = styled.input`
   border: none;
   border-radius: 5px;
   outline: none;
+  transition: all 0.25s ease;
 `
 
 export const Buttons = styled.div`

@@ -1,5 +1,14 @@
 // Packages:
 import { styled } from 'solid-styled-components'
+import Color from 'color'
+
+
+// Typescript:
+import { THEME } from '../../../../../styles/theme'
+
+
+// Constants:
+import COLORS from '../../../../../styles/color'
 
 
 // Styles:
@@ -37,13 +46,23 @@ export const Title = styled.div`
   font-weight: 700;
 `
 
-export const MetaDetails = styled.div`
+export const MetaDetails = styled.div<{
+  currentTheme: THEME
+}>`
   display: flex;
   align-items: center;
   margin-top: 0.25rem;
   font-size: 1rem;
   font-weight: 600;
-  color: #6A6A6A;
+  color: ${ props =>
+    COLORS[ props.currentTheme ] === COLORS.DARK ?
+    Color(COLORS.LIGHT).darken(0.5).hex() :
+    (
+      Color(COLORS[ props.currentTheme ], 'hex').isLight() ?
+      Color(COLORS[ props.currentTheme ]).darken(0.4).hex() :
+      Color(COLORS[ props.currentTheme ]).lighten(0.6).hex()
+    )
+  };
   user-select: none;
 `
 
@@ -58,19 +77,23 @@ export const DividerDot = styled.div`
   margin: 0 0.5rem;
 `
 
-export const ReadingTime = styled(MetaDetail)`
+export const ReadingTime = styled(MetaDetail)<{
+  currentTheme: THEME
+}>`
   transition: all 0.25s ease;
   
   &:hover {
-    color: #77AD78;
+    color: ${ props => [ COLORS.LIGHT, COLORS.DARK ].includes(COLORS[ props.currentTheme ]) ? '#77AD78' : 'inherit' };
   }
 `
 
-export const Distance = styled(MetaDetail)`
+export const Distance = styled(MetaDetail)<{
+  currentTheme: THEME
+}>`
   transition: all 0.25s ease;
   
   &:hover {
-    color: #FF715B;
+    color: ${ props => [ COLORS.LIGHT, COLORS.DARK ].includes(COLORS[ props.currentTheme ]) ? '#FF715B' : 'inherit' };
   }
 `
 

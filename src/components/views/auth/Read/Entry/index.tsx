@@ -82,18 +82,18 @@ const Entry: Component<{
     >
       <EntrySection>
         <Title>{ props.entry.title }</Title>
-        <MetaDetails>
+        <MetaDetails currentTheme={ props.metadata.theme }>
           <Time>
             { firestoreTimeToReadable(props.entry.time.seconds) }
           </Time>
           <DividerDot>∙</DividerDot>
-          <ReadingTime>
+          <ReadingTime currentTheme={ props.metadata.theme }>
             <BiStopwatch size={ 16 } style={{ 'margin-right': '0.25rem' }} />
             { readingTime(props.entry.body).text }
           </ReadingTime>
           <DividerDot>∙</DividerDot>
           <Show when={ props.entry.position }>
-            <Distance>
+            <Distance currentTheme={ props.metadata.theme }>
               <IoLocationSharp size={ 16 } style={{ 'margin-right': '0.25rem' }} />
               { distanceBetweenTwoPoints(props.entry.position, props.metadata.position) } km away
             </Distance>

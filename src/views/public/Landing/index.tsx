@@ -18,10 +18,11 @@ import {
   useRouteData
 } from 'solid-app-router'
 import { get, ref } from 'firebase/database'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 
 
 // Typescript:
-import { IMetadata } from '../../../ts/state'
+import { IMetadata, IPosition } from '../../../ts/state'
 import { SetStoreFunction } from 'solid-js/store'
 import { ILayoutProps } from '../../global/Layout/types'
 
@@ -33,6 +34,7 @@ import { DATABASE } from '../../../firebase'
 
 // Components:
 import Layout from '../../global/Layout'
+import IntroductionCard from '../../../components/views/public/IntroductionCard'
 import Error from '../../../components/global/Error'
 
 
@@ -54,6 +56,7 @@ const Landing: Component = () => {
   // Constants:
   const provider = new GoogleAuthProvider()
   const auth = getAuth()
+  const analytics = getAnalytics()
   const { metadata, setMetadata }: {
     metadata: Readonly<IMetadata>,
     setMetadata: SetStoreFunction<IMetadata>
@@ -62,6 +65,23 @@ const Landing: Component = () => {
   const navigate = useNavigate()
 
   // Functions:
+  const getLocationAccess = async () => {
+    const position: IPosition = await new Promise(resolve => {
+      navigator.geolocation.getCurrentPosition(p => resolve({
+        lat: p.coords.latitude,
+        long: p.coords.longitude
+      }), (e) => {
+        resolve({
+          lat: 0,
+          long: 0
+        })
+      })
+    })
+    setMetadata({
+      position
+    })
+  }
+
   const signIn = async () => {
     setMetadata({
       isSigningIn: true
@@ -101,18 +121,54 @@ const Landing: Component = () => {
           <Wrapper
             style={{ animation: layoutProps.wrapperAnimation() }}
           >
+            <Show when={ !metadata.didShowIntroductionCard }>
+              <IntroductionCard
+                theme={ metadata.theme }
+                onClick={
+                  async () => {
+                    await getLocationAccess()
+                    setMetadata({
+                      didShowIntroductionCard: true,
+                      permissions: {
+                        ...metadata.permissions,
+                        location: true
+                      }
+                    })
+                  }
+                }
+              />
+            </Show>
             <Error
               errorText='thanks for checking me out 🥺'
-              errorDescription={ <>unbottle will be in its alpha phase till may 31st, 2022<br />please report bugs at <a href='https://instagram.com/unbottle.app' target='_blank'>@unbottle.app</a> on instagram ❤️</> }
+              errorDescription={ <>unbottle will be in its beta phase till july 31st, 2022<br />please follow me at <a href='https://instagram.com/unbottle.app' target='_blank' onClick={ () => logEvent(analytics, 'landing_username_click') }>@unbottle.app</a> on instagram ❤️</> }
               action={{
-                do: metadata.isSigningIn ? () => {} : (!metadata.isSignedIn ? signIn : () => layoutProps.goToRoute({ route: ROUTES.AUTH.HOME })),
-                text: metadata.isSigningIn ? 'verifying login..' : (!metadata.isSignedIn ? 'sign in?' : 'go to app')
+                do: (
+                  metadata.isSigningIn ?
+                  () => {} :
+                  (
+                    !metadata.isSignedIn ?
+                    signIn :
+                    () => layoutProps.goToRoute({ route: ROUTES.AUTH.HOME })
+                  )
+                ),
+                text: (
+                  metadata.isSigningIn ?
+                  'verifying login..' :
+                  (
+                    !metadata.isSignedIn ?
+                    'sign in?' :
+                    'go to app'
+                  )
+                )
               }}
+              theme={ metadata.theme }
+              isActionDisabled={ metadata.isSigningIn }
             />
             <Show when={ location.state?.signInFailed }>
               <Error
                 errorText='sign in failed 🫤'
                 errorDescription={ `i'm not sure what the issue is, please check the console log? 🥺` }
+                theme={ metadata.theme }
               />
             </Show>
           </Wrapper>

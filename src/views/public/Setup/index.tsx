@@ -36,6 +36,7 @@ import { Input } from '../../../styles/components'
 import {
   Wrapper,
   Title,
+  InputArea,
   ErrorText
 } from './styles'
 
@@ -70,7 +71,7 @@ const Setup: Component = () => {
       ) navigate(ROUTES.AUTH.HOME, { state: { prev: ROUTES.PUBLIC.LANDING } })
       else {
         await updateProfile(auth.currentUser, {
-          displayName: username()
+          displayName: username().toLowerCase()
         })
       }
     }
@@ -80,12 +81,12 @@ const Setup: Component = () => {
   const handleUserSetup = async (goToRoute: TGoToRoute) => {
     setLoading(true)
     if (!auth.currentUser) return
-    if (await isUsernameTaken(username())) setErrorText('username already taken 🫤')
+    if (await isUsernameTaken(username().toLowerCase())) setErrorText('username already taken 🫤')
     await updateProfile(auth.currentUser, {
-      displayName: username()
+      displayName: username().toLowerCase()
     })
     updateFirestoreUser({
-      username: username()
+      username: username().toLowerCase()
     })
     setLoading(false)
     goToRoute({
@@ -104,29 +105,37 @@ const Setup: Component = () => {
             <GoBack goBack={ () => layoutProps.goBack(metadata.isSignedIn ? ROUTES.AUTH.HOME : ROUTES.PUBLIC.LANDING) } style={{ position: 'absolute', top: '4rem', left: '4rem' }} />
             <div>
               <Title>how would you like to be called?</Title>
-              <Input
-                type='text'
-                placeholder='username'
-                value={ username() }
-                style={{
-                  'min-width': '25vw',
-                  background: username().trim().length === 0 ? '#FFEEEE' : '#ECECEC'
-                }}
-                autocomplete='off'
-                spellcheck={ false }
-                onKeyUp={ e => setUsername(e.currentTarget.value) }
-              />
+              <InputArea>
+                <Input
+                  type='text'
+                  placeholder='username'
+                  value={ username().toLowerCase() }
+                  style={{
+                    'min-width': '25vw',
+                    'margin-top': 0,
+                    background: username().trim().length === 0 ? '#FFEEEE' : '#ECECEC'
+                  }}
+                  autocomplete='off'
+                  spellcheck={ false }
+                  onKeyUp={ e => setUsername(e.currentTarget.value) }
+                />
+                <Button
+                  theme={ metadata.theme }
+                  text={ loading() ? 'verifying..' : 'next'}
+                  isDisabled={ username().trim().length === 0 }
+                  style={{
+                    'min-width': '4rem',
+                    'width': '4rem',
+                    'max-height': '1.5rem',
+                    'margin': 0,
+                    'margin-left': '0.75rem',
+                    'padding': '0.6rem 1rem',
+                    'border-radius': '5px'
+                  }}
+                  onClick={ () => handleUserSetup(layoutProps.goToRoute) }
+                />
+              </InputArea>
               <ErrorText>{ errorText() }</ErrorText>
-              <Button
-                text={ loading() ? 'verifying..' : 'next'}
-                isDisabled={ username().trim().length === 0 }
-                style={{
-                  'min-width': '5rem',
-                  width: '5rem',
-                  'margin-left': 0
-                }}
-                onClick={ () => handleUserSetup(layoutProps.goToRoute) }
-              />
             </div>
           </Wrapper>
         )

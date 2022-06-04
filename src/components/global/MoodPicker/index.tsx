@@ -4,6 +4,7 @@ import { Component, For } from 'solid-js'
 
 // Typescript:
 import { IMood } from '../../../ts/state'
+import { THEME } from '../../../styles/theme'
 
 
 // Imports:
@@ -16,6 +17,7 @@ import {
 // Functions:
 const MoodPicker: Component<{
   selectedMood?: IMood
+  theme: THEME
   onClick: (mood: IMood) => any
   onMouseOver: (color: string) => void
   onMouseOut: () => void
@@ -51,7 +53,10 @@ const MoodPicker: Component<{
 
   // Return:
   return (
-    <Wrapper wantsInput={ props.selectedMood === undefined }>
+    <Wrapper
+      wantsInput={ props.selectedMood === undefined }
+      currentTheme={ props.theme }
+    >
       <For each={ MOODS }>
         {
           mood => (

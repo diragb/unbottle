@@ -3,6 +3,7 @@ import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getDatabase } from 'firebase/database'
 import { getFirestore } from 'firebase/firestore'
+import { getAnalytics } from 'firebase/analytics'
 
 
 // Constants:
@@ -25,10 +26,12 @@ const DATABASE = {
   REALTIME,
   FIRESTORE
 }
+const ANALYTICS = getAnalytics(app)
 
 
 // Exports:
 export {
   AUTH,
-  DATABASE
+  DATABASE,
+  ANALYTICS
 }
