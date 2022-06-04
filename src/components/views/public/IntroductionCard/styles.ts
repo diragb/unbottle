@@ -31,14 +31,45 @@ export const Card = styled.div`
   padding: 1.5rem 2rem;
   font-family: 'Inter', 'Nunito Sans', sans-serif;
   border-radius: 0.5rem;
+
+  @media screen and (max-width: 768px) {
+    padding: 1rem 1.25rem;
+  }
 `
 
 export const Title = styled.div`
   font-size: 2rem;
   font-weight: 800;
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.5rem;
+  }
 `
 
 export const Description = styled.div`
   margin-top: 0.5rem;
   font-size: 1.25rem;
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.8rem;
+  }
+`
+
+export const ButtonWrapper = styled.div`
+  @media screen and (max-width: 768px) {
+    transform: scale(0.75);
+    transform-origin: 0 50%;
+    -webkit-transform-origin-x: 0;
+    -ms-transform-origin: 0 50%;
+  }
+`
+
+export const PermissionReason = styled.div`
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  
+  @media screen and (max-width: 768px) {
+    margin-top: 0.25rem;
+    font-size: 0.65rem;
+  }
 `

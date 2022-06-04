@@ -19,7 +19,9 @@ import {
   Wrapper,
   Card,
   Title,
-  Description
+  Description,
+  PermissionReason,
+  ButtonWrapper
 } from './styles'
 
 
@@ -52,28 +54,25 @@ const IntroductionCard: Component<{
           <br />
           <br />
           so, are you ready to get started?
-          <Button
-            text='get started! 🎉'
-            theme={ props.theme }
-            shouldAnimate={ false }
-            style={{
-              'width': '5rem',
-              'margin': 0,
-              'margin-top': '0.75rem',
-              'padding': '0.75rem 1rem',
-              'background-color': COLORS.BLUE,
-              'color': COLORS.LIGHT,
-            }}
-            onClick={ props.onClick }
-          />
-          <div
-            style={{
-              'margin-top': '1rem',
-              'font-size': '0.75rem'
-            }}
-          >
+          <ButtonWrapper>
+            <Button
+              text='get started! 🎉'
+              theme={ props.theme }
+              shouldAnimate={ false }
+              style={{
+                'width': '5rem',
+                'margin': 0,
+                'margin-top': '0.75rem',
+                'padding': '0.75rem 1rem',
+                'background-color': COLORS.BLUE,
+                'color': COLORS.LIGHT,
+              }}
+              onClick={ props.onClick }
+            />
+          </ButtonWrapper>
+          <PermissionReason>
             we need your location access to hide your diary entries up until a distance
-          </div>
+          </PermissionReason>
         </Description>
       </Card>
     </Wrapper>
