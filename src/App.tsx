@@ -110,7 +110,6 @@ const App: Component = () => {
         })
       })
     }) : { lat: 0, long: 0 }
-    // TODO: Throttle lastSeen to 1 minute ranges
     const userUpdateObject: Partial<IUser> = {}
     const currentTimestamp = Timestamp.now()
     if (currentTimestamp.seconds > metadata.lastSeen.seconds + 60) {
