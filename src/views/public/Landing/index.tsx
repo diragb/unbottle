@@ -18,6 +18,7 @@ import {
   useRouteData
 } from 'solid-app-router'
 import { get, ref } from 'firebase/database'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 
 
 // Typescript:
@@ -55,6 +56,7 @@ const Landing: Component = () => {
   // Constants:
   const provider = new GoogleAuthProvider()
   const auth = getAuth()
+  const analytics = getAnalytics()
   const { metadata, setMetadata }: {
     metadata: Readonly<IMetadata>,
     setMetadata: SetStoreFunction<IMetadata>
@@ -138,7 +140,7 @@ const Landing: Component = () => {
             </Show>
             <Error
               errorText='thanks for checking me out 🥺'
-              errorDescription={ <>unbottle will be in its beta phase till july 31st, 2022<br />please follow me at <a href='https://instagram.com/unbottle.app' target='_blank'>@unbottle.app</a> on instagram ❤️</> }
+              errorDescription={ <>unbottle will be in its beta phase till july 31st, 2022<br />please follow me at <a href='https://instagram.com/unbottle.app' target='_blank' onClick={ () => logEvent(analytics, 'landing_username_click') }>@unbottle.app</a> on instagram ❤️</> }
               action={{
                 do: (
                   metadata.isSigningIn ?
