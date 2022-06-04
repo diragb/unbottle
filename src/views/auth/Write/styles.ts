@@ -47,6 +47,7 @@ export const Editor = styled.textarea`
   margin-top: 0.5rem;
   padding: 1rem;
   font-size: 1.1rem;
+  font-family: 'Nunito Sans', sans-serif;
   border: none;
   border-radius: 5px;
   outline: none;
