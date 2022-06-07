@@ -115,7 +115,7 @@ const Write: Component = () => {
     mood: undefined,
     title: '',
 		body: '',
-    distance: '100',
+    distance: '10',
     sentiment: 0,
     range: { min: 0, max: 0 },
     hearts: 0,
