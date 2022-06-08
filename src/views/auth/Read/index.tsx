@@ -130,7 +130,7 @@ const Read: Component = () => {
       setEntriesQueryCursor(newEntriesQueryCursor)
       fetchedEntries.sort((entryA, entryB) =>  entryB.time.seconds - entryA.time.seconds)
       const filteredFetchedEntries = fetchedEntries
-        .filter(entry => !metadata.entriesRead.includes(entry.id))
+        // .filter(entry => !metadata.entriesRead.includes(entry.id)) // TODO: Remove this when we have enough entries that it starts overloading the user.
         .filter((v, i, a) => a.findIndex(v2 => (v2.id === v.id)) === i)
         .filter(entry => entry.signature !== currentUserSignature)
       const newEntries = entries().concat(filteredFetchedEntries)
