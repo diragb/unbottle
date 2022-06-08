@@ -223,7 +223,7 @@ const Read: Component = () => {
                       <div style={{ display: 'flex', 'justify-content': 'center', 'align-items': 'center', height: '75vh' }}>
                         <Error
                           errorText='no more entries found 😅'
-                          errorDescription='maybe write an entry for others to read? 👉👈'
+                          errorDescription='maybe write an entry for others to read?'
                           action={{
                             text: 'write an entry',
                             do: () => layoutProps.goToRoute({ route: ROUTES.AUTH.WRITE, state: { prev: ROUTES.AUTH.READ } })
