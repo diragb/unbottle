@@ -33,6 +33,7 @@ import ThemeBubble from './components/global/ThemeBubble'
 const GlobalStyle = createGlobalStyles`
   body {
     margin: 0;
+    overflow-x: hidden;
     font-family: 'Nunito Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
@@ -59,8 +60,7 @@ const Wrapper = styled.div<{
   placeholderColor: string
 }>`
   width: 100vw;
-  height: 100vh;
-  overflow-x: hidden;
+  /* height: 100vh; */
   transition: all 0.25s ease;
 
   a {

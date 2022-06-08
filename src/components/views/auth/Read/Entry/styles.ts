@@ -44,6 +44,7 @@ export const Title = styled.div`
   display: -webkit-box;
   font-size: 2rem;
   font-weight: 700;
+  transition: all 0.25s ease;
 `
 
 export const MetaDetails = styled.div<{
@@ -100,6 +101,7 @@ export const Distance = styled(MetaDetail)<{
 export const Body = styled.div`
   margin-top: 1.5rem;
   font-size: 1.25rem;
+  transition: all 0.25s ease;
 `
 
 export const Details = styled.div`
