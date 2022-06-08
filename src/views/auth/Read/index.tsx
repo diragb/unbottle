@@ -106,9 +106,13 @@ const Read: Component = () => {
     const dequadrantizedReaderLocation = dequadrantizePoint(metadata.position)
     const readerMul = dequadrantizedReaderLocation.lat * dequadrantizedReaderLocation.long
     const entriesRef = collection(DATABASE.FIRESTORE, 'entries')
+    // const entryQueryConstraints = {
+    //   greaterThan: [ where('range.max', '<=', readerMul), limit(5) ],
+    //   lessThan: [ where('range.min', '>=', readerMul), limit(5) ]
+    // } // TODO: WRT #20 Remove this when there are many entries and entry velocity is also high
     const entryQueryConstraints = {
-      greaterThan: [ where('range.max', '<=', readerMul), limit(5) ],
-      lessThan: [ where('range.min', '>=', readerMul), limit(5) ]
+      greaterThan: [ limit(5) ],
+      lessThan: [ limit(5) ]
     }
     if (entriesQueryCursor().greaterThan) entryQueryConstraints.greaterThan.push(startAfter(entriesQueryCursor().greaterThan))
     if (entriesQueryCursor().lessThan) entryQueryConstraints.lessThan.push(startAfter(entriesQueryCursor().lessThan))
@@ -130,7 +134,7 @@ const Read: Component = () => {
       setEntriesQueryCursor(newEntriesQueryCursor)
       fetchedEntries.sort((entryA, entryB) =>  entryB.time.seconds - entryA.time.seconds)
       const filteredFetchedEntries = fetchedEntries
-        // .filter(entry => !metadata.entriesRead.includes(entry.id)) // TODO: Remove this when we have enough entries that it starts overloading the user.
+        // .filter(entry => !metadata.entriesRead.includes(entry.id)) // TODO: WRT #15 Remove this when we have enough entries that it starts overloading the user.
         .filter((v, i, a) => a.findIndex(v2 => (v2.id === v.id)) === i)
         .filter(entry => entry.signature !== currentUserSignature)
       const newEntries = entries().concat(filteredFetchedEntries)
