@@ -1,5 +1,5 @@
 // Constants:
-import { DEGREE_METRIC_EQUIVALENT } from '../constants/geo'
+import { DEGREE_METRIC_EQUIVALENT, R } from '../constants/geo'
 
 
 // Typescript:
@@ -64,6 +64,36 @@ export const linearRange = ({ lat, long }: ICoordMinMax) => ({
 
 export const distanceBetweenTwoPoints = (a: ICoordNumber, b: ICoordNumber, options?: {
   round?: number
-}) => (
-  parseFloat((Math.sqrt(((a.lat - b.lat) ** 2) + ((a.long - b.long) ** 2))).toFixed(options?.round ?? 2))
-)
+}) => {
+  const coords = {
+    a: {
+      lat: a.lat * Math.PI / 180,
+      long: a.long * Math.PI / 180
+    },
+    b: {
+      lat: b.lat * Math.PI / 180,
+      long: b.long * Math.PI / 180
+    }
+  }
+  return parseFloat(
+    (
+      (
+        2 * Math.asin(
+          Math.sqrt(
+            Math.pow(Math.sin(((coords.a.lat - coords.b.lat)) / 2), 2)
+            +
+            (
+              Math.cos(coords.a.lat) *
+              Math.cos(coords.b.lat) *
+              Math.pow(Math.sin((coords.a.long - coords.b.long) / 2), 2)
+            )
+          )
+        )
+      ) * R
+    ).toFixed(options?.round ?? 2)
+  )
+}
+
+// => (
+// parseFloat((Math.sqrt(((a.lat - b.lat) ** 2) + ((a.long - b.long) ** 2))).toFixed(options?.round ?? 2))
+// )
