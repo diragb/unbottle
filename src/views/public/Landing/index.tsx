@@ -19,10 +19,11 @@ import {
 } from 'solid-app-router'
 import { get, ref } from 'firebase/database'
 import { getAnalytics, logEvent } from 'firebase/analytics'
+import { getCoarseLocation } from '../../../utils/geo'
 
 
 // Typescript:
-import { IMetadata, IPosition } from '../../../ts/state'
+import { IMetadata } from '../../../ts/state'
 import { SetStoreFunction } from 'solid-js/store'
 import { ILayoutProps } from '../../global/Layout/types'
 
@@ -40,8 +41,6 @@ import Error from '../../../components/global/Error'
 
 // Styles:
 const Wrapper = styled.div`
-  position: absolute;
-  top: 0; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -65,23 +64,6 @@ const Landing: Component = () => {
   const navigate = useNavigate()
 
   // Functions:
-  const getLocationAccess = async () => {
-    const position: IPosition = await new Promise(resolve => {
-      navigator.geolocation.getCurrentPosition(p => resolve({
-        lat: p.coords.latitude,
-        long: p.coords.longitude
-      }), (e) => {
-        resolve({
-          lat: 0,
-          long: 0
-        })
-      })
-    })
-    setMetadata({
-      position
-    })
-  }
-
   const signIn = async () => {
     setMetadata({
       isSigningIn: true
@@ -126,13 +108,9 @@ const Landing: Component = () => {
                 theme={ metadata.theme }
                 onClick={
                   async () => {
-                    await getLocationAccess()
                     setMetadata({
-                      didShowIntroductionCard: true,
-                      permissions: {
-                        ...metadata.permissions,
-                        location: true
-                      }
+                      position: await getCoarseLocation(),
+                      didShowIntroductionCard: true
                     })
                   }
                 }

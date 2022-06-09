@@ -65,7 +65,7 @@ export const ButtonWrapper = styled.div`
 `
 
 export const PermissionReason = styled.div`
-  margin-top: 1rem;
+  margin-top: 0.75rem;
   font-size: 0.75rem;
   
   @media screen and (max-width: 768px) {

@@ -1,11 +1,17 @@
 // Packages:
-import { Component, createEffect, createSignal, onMount } from 'solid-js'
+import {
+  Component,
+  createEffect,
+  createSignal,
+  onMount
+} from 'solid-js'
 import { createGlobalStyles, styled } from 'solid-styled-components'
 import createLocalStore from './utils/createLocalStore'
 import { Routes, Route } from 'solid-app-router'
 import { updateFirestoreUser } from './firebase/utils'
 import { Timestamp } from 'firebase/firestore'
 import Color from 'color'
+import { getCoarseLocation, getPreciseGeolocation } from './utils/geo'
 
 
 // Typescript:
@@ -98,18 +104,7 @@ const App: Component = () => {
 
   // Effects:
   onMount(async () => {
-    const position: IPosition = metadata.permissions.location ? await new Promise(resolve => {
-      navigator.geolocation.getCurrentPosition(p => resolve({
-        lat: p.coords.latitude,
-        long: p.coords.longitude
-      }), (e) => {
-        // alert(`⚠️ unable to fetch location ⚠️: ${ JSON.stringify(e) }`)
-        resolve({
-          lat: 0,
-          long: 0
-        })
-      })
-    }) : { lat: 0, long: 0 }
+    const position: IPosition = metadata.permissions.location ? await getPreciseGeolocation() : await getCoarseLocation()
     const userUpdateObject: Partial<IUser> = {}
     const currentTimestamp = Timestamp.now()
     if (currentTimestamp.seconds > metadata.lastSeen.seconds + 60) {

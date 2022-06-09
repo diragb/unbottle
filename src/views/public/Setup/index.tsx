@@ -104,7 +104,7 @@ const Setup: Component = () => {
           >
             <GoBack goBack={ () => layoutProps.goBack(metadata.isSignedIn ? ROUTES.AUTH.HOME : ROUTES.PUBLIC.LANDING) } style={{ position: 'absolute', top: '4rem', left: '4rem' }} />
             <div>
-              <Title>how would you like to be called?</Title>
+              <Title>what would you like to be called?</Title>
               <InputArea>
                 <Input
                   type='text'

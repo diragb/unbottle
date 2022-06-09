@@ -1,5 +1,6 @@
 // Constants:
-import { DEGREE_METRIC_EQUIVALENT, R } from '../constants/geo'
+import { DEGREE_METRIC_EQUIVALENT, NULL_ISLAND_COORDS, R } from '../constants/geo'
+import { IPosition } from '../ts/state'
 
 
 // Typescript:
@@ -11,6 +12,33 @@ export interface ICoordNumber { lat: number, long: number }
 
 
 // Exports:
+export const getCoarseLocation = async (geolocationPositionError?: GeolocationPositionError): Promise<IPosition> => {
+  let IPDetails
+  try {
+    IPDetails = await (await fetch('http://api.ipstack.com/check?access_key=a6c85f8a76b8a2d507d9452575910488')).json()
+    if (IPDetails.success === false) throw new Error(JSON.parse(IPDetails))
+    return {
+      lat: IPDetails.latitude,
+      long: IPDetails.longitude
+    }
+  } catch (IPStackError) {
+    if (geolocationPositionError) console.error('⚠️ Unable to fetch location from Geolocation API', geolocationPositionError)
+    console.error('⚠️ Unable to fetch location from IPStack API', IPStackError)
+    console.error('⚠️ Response received from IPStack', IPDetails)
+    console.error('⚠️ Assuming user is at NULL_ISLAND')
+    return NULL_ISLAND_COORDS
+  }
+}
+
+export const getPreciseGeolocation = async (): Promise<IPosition> => await new Promise(resolve => {
+  navigator.geolocation.getCurrentPosition(p => resolve({
+    lat: p.coords.latitude,
+    long: p.coords.longitude
+  }), e => {
+    resolve(getCoarseLocation(e))
+  })
+})
+
 export const getLatitudeRange = (metric: number, distance: number): IMinMax => {
   const degrees = distance / DEGREE_METRIC_EQUIVALENT
   let [ min, max ] = [ metric - degrees, metric + degrees ]
