@@ -117,7 +117,7 @@ const Landing: Component = () => {
               />
             </Show>
             <Error
-              errorText='thanks for checking me out 🥺'
+              errorText='thanks for checking me out'
               errorDescription={ <>unbottle will be in its beta phase till july 31st, 2022<br />please follow me at <a href='https://instagram.com/unbottle.app' target='_blank' onClick={ () => logEvent(analytics, 'landing_username_click') }>@unbottle.app</a> on instagram ❤️</> }
               action={{
                 do: (
@@ -134,7 +134,7 @@ const Landing: Component = () => {
                   'verifying login..' :
                   (
                     !metadata.isSignedIn ?
-                    'sign in?' :
+                    'sign in' :
                     'go to app'
                   )
                 )

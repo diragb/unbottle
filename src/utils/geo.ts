@@ -15,7 +15,7 @@ export interface ICoordNumber { lat: number, long: number }
 export const getCoarseLocation = async (geolocationPositionError?: GeolocationPositionError): Promise<IPosition> => {
   let IPDetails
   try {
-    IPDetails = await (await fetch('http://api.ipstack.com/check?access_key=a6c85f8a76b8a2d507d9452575910488')).json()
+    IPDetails = await (await fetch('https://api.ipstack.com/check?access_key=a6c85f8a76b8a2d507d9452575910488')).json()
     if (IPDetails.success === false) throw new Error(JSON.parse(IPDetails))
     return {
       lat: IPDetails.latitude,
