@@ -1,5 +1,10 @@
 // Packages:
-import { Component, createEffect, createSignal, onMount } from 'solid-js'
+import {
+  Component,
+  createEffect,
+  createSignal,
+  onMount
+} from 'solid-js'
 import { createGlobalStyles, styled } from 'solid-styled-components'
 import createLocalStore from './utils/createLocalStore'
 import { Routes, Route } from 'solid-app-router'

@@ -23,7 +23,7 @@ import { getCoarseLocation } from '../../../utils/geo'
 
 
 // Typescript:
-import { IMetadata, IPosition } from '../../../ts/state'
+import { IMetadata } from '../../../ts/state'
 import { SetStoreFunction } from 'solid-js/store'
 import { ILayoutProps } from '../../global/Layout/types'
 
@@ -41,8 +41,6 @@ import Error from '../../../components/global/Error'
 
 // Styles:
 const Wrapper = styled.div`
-  position: absolute;
-  top: 0; 
   display: flex;
   justify-content: center;
   align-items: center;
