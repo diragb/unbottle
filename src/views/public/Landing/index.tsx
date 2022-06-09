@@ -19,6 +19,7 @@ import {
 } from 'solid-app-router'
 import { get, ref } from 'firebase/database'
 import { getAnalytics, logEvent } from 'firebase/analytics'
+import { getCoarseLocation } from '../../../utils/geo'
 
 
 // Typescript:
@@ -65,23 +66,6 @@ const Landing: Component = () => {
   const navigate = useNavigate()
 
   // Functions:
-  const getLocationAccess = async () => {
-    const position: IPosition = await new Promise(resolve => {
-      navigator.geolocation.getCurrentPosition(p => resolve({
-        lat: p.coords.latitude,
-        long: p.coords.longitude
-      }), (e) => {
-        resolve({
-          lat: 0,
-          long: 0
-        })
-      })
-    })
-    setMetadata({
-      position
-    })
-  }
-
   const signIn = async () => {
     setMetadata({
       isSigningIn: true
@@ -126,13 +110,9 @@ const Landing: Component = () => {
                 theme={ metadata.theme }
                 onClick={
                   async () => {
-                    await getLocationAccess()
                     setMetadata({
-                      didShowIntroductionCard: true,
-                      permissions: {
-                        ...metadata.permissions,
-                        location: true
-                      }
+                      position: await getCoarseLocation(),
+                      didShowIntroductionCard: true
                     })
                   }
                 }

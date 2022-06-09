@@ -71,7 +71,7 @@ const IntroductionCard: Component<{
             />
           </ButtonWrapper>
           <PermissionReason>
-            we need your location access to hide your diary entries up until a distance
+            note: we need your location access to hide your diary entries up until a distance
           </PermissionReason>
         </Description>
       </Card>
