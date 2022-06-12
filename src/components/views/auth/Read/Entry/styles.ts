@@ -27,7 +27,8 @@ export const Wrapper = styled.div<{ isSolo: boolean }>`
   }
 
   @media screen and (max-width: 768px) {
-    margin-top: 0;
+    margin-top: 3rem;
+    justify-content: unset;
   }
 `
 
@@ -65,6 +66,12 @@ export const MetaDetails = styled.div<{
     )
   };
   user-select: none;
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.8rem;
+    flex-flow: wrap;
+    height: 3rem;
+  }
 `
 
 export const MetaDetail = styled.div`
