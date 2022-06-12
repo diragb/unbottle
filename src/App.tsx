@@ -115,7 +115,6 @@ const App: Component = () => {
       }
     })
     const precisePosition: IPosition | {} = metadata.permissions.location ? await getPreciseGeolocation() : {}
-    console.log(precisePosition)
     const position: IExtendedPosition = {
       ...await getCoarseLocation(),
       ...precisePosition,
