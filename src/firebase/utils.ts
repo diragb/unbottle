@@ -11,7 +11,11 @@ import {
   updateDoc
 } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
-import { get, ref, set } from 'firebase/database'
+import {
+  get,
+  ref,
+  set
+} from 'firebase/database'
 import date from 'date-and-time'
 import ordinal from 'date-and-time/plugin/ordinal'
 date.plugin(ordinal)
@@ -23,7 +27,6 @@ import { IPreviewEntry, IUser } from '../ts/state'
 
 // Constants:
 import { DATABASE } from './'
-
 
 
 // Exports:
