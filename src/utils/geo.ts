@@ -1,6 +1,6 @@
 // Constants:
-import { DEGREE_METRIC_EQUIVALENT, NULL_ISLAND_COORDS, R } from '../constants/geo'
-import { IPosition } from '../ts/state'
+import { DEGREE_METRIC_EQUIVALENT, NULL_ISLAND_POSITION, R } from '../constants/geo'
+import { IExtendedPosition, IPosition } from '../ts/state'
 
 
 // Typescript:
@@ -12,22 +12,40 @@ export interface ICoordNumber { lat: number, long: number }
 
 
 // Exports:
-export const getCoarseLocation = async (geolocationPositionError?: GeolocationPositionError): Promise<IPosition> => {
+export const getCoarseLocation = async (geolocationPositionError?: GeolocationPositionError): Promise<IExtendedPosition> => {
   let IPDetails
   try {
     IPDetails = await (await fetch('https://api.ipstack.com/check?access_key=a6c85f8a76b8a2d507d9452575910488')).json()
     if (IPDetails.success === false) throw new Error(JSON.parse(IPDetails))
     return {
       lat: IPDetails.latitude,
-      long: IPDetails.longitude
+      long: IPDetails.longitude,
+      country: {
+        code: IPDetails['country_code'],
+        name: IPDetails['country_name']
+      },
+      region: {
+        code: IPDetails['region_code'],
+        name: IPDetails['region_name']
+      },
+      isPrecise: false
     }
   } catch (IPStackError) {
     if (geolocationPositionError) console.error('⚠️ Unable to fetch location from Geolocation API', geolocationPositionError)
     console.error('⚠️ Unable to fetch location from IPStack API', IPStackError)
     console.error('⚠️ Response received from IPStack', IPDetails)
     console.error('⚠️ Assuming user is at NULL_ISLAND')
-    return NULL_ISLAND_COORDS
+    return {
+      ...NULL_ISLAND_POSITION,
+      isPrecise: false
+    }
   }
+}
+
+export const getGeolocationPermissionStatus = async (): Promise<'denied' | 'granted' | 'prompt'> => {
+  if ('permissions' in navigator) {
+    return (await navigator.permissions.query({ name: 'geolocation' })).state
+  } else return 'denied'
 }
 
 export const getPreciseGeolocation = async (): Promise<IPosition> => await new Promise(resolve => {
@@ -121,7 +139,3 @@ export const distanceBetweenTwoPoints = (a: ICoordNumber, b: ICoordNumber, optio
     ).toFixed(options?.round ?? 2)
   )
 }
-
-// => (
-// parseFloat((Math.sqrt(((a.lat - b.lat) ** 2) + ((a.long - b.long) ** 2))).toFixed(options?.round ?? 2))
-// )

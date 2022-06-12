@@ -17,6 +17,7 @@ import { IEntry, IMetadata } from '../../../../../ts/state'
 
 // Imports:
 import {
+  BiSolidCommentDetail,
   BiStopwatch,
   // BiSolidCommentDetail
 } from 'solid-icons/bi'
@@ -38,8 +39,12 @@ import {
   DividerDot,
   ReadingTime,
   Distance,
-  Body
+  Body,
+  Details,
+  Detail,
+  DetailText
 } from './styles'
+import { AiFillHeart } from 'solid-icons/ai'
 
 
 // Functions:
@@ -102,10 +107,10 @@ const Entry: Component<{
         <Show when={ props.entry.body.length > 0 }>
           <Body ref={ bodyRef } innerHTML={ sanitize(props.entry.body, sanitizeHtmlOptions) } />
         </Show>
-        {/* <Details>
-          <Detail style={{ 'margin-right': '1.25rem' }}><AiFillHeart size={ 16 } color="#F15156"/><DetailText>{ currentEntry().hearts ?? 34 }</DetailText></Detail>
-          <Detail><BiSolidCommentDetail size={ 16 } color="#6F2DBD"/><DetailText>{ currentEntry().comments ?? 5 }</DetailText></Detail>
-        </Details> */}
+        <Details>
+          <Detail style={{ 'margin-right': '1.25rem' }}><AiFillHeart size={ 16 } color="#F15156"/><DetailText>{ props.entry.hearts ?? 34 }</DetailText></Detail>
+          <Detail><BiSolidCommentDetail size={ 16 } color="#6F2DBD"/><DetailText>{ props.entry.comments ?? 5 }</DetailText></Detail>
+        </Details>
       </EntrySection>
     </Wrapper>
   )

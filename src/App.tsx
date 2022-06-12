@@ -11,12 +11,14 @@ import { Routes, Route } from 'solid-app-router'
 import { updateFirestoreUser } from './firebase/utils'
 import { Timestamp } from 'firebase/firestore'
 import Color from 'color'
-import { getCoarseLocation, getPreciseGeolocation } from './utils/geo'
+import { getCoarseLocation, getGeolocationPermissionStatus, getPreciseGeolocation } from './utils/geo'
+import isEqual from 'lodash.isequal'
 
 
 // Typescript:
 import { generateFontColor, THEME } from './styles/theme'
 import {
+  IExtendedPosition,
   IMetadata,
   IPosition,
   IUser
@@ -26,6 +28,7 @@ import {
 // Constants:
 import ROUTES from './routes'
 import COLORS from './styles/color'
+import { NULL_ISLAND_POSITION } from './constants/geo'
 
 
 // Components:
@@ -89,8 +92,8 @@ const App: Component = () => {
     isSigningIn: false,
     isSignedIn: false,
     position: {
-      lat: 0,
-      long: 0
+      ...NULL_ISLAND_POSITION,
+      isPrecise: false
     },
     entriesRead: [],
     lastSeen: Timestamp.now(),
@@ -104,7 +107,20 @@ const App: Component = () => {
 
   // Effects:
   onMount(async () => {
-    const position: IPosition = metadata.permissions.location ? await getPreciseGeolocation() : await getCoarseLocation()
+    const isPrecisePositionAllowed = await getGeolocationPermissionStatus() === 'granted'
+    if (metadata.permissions.location !== isPrecisePositionAllowed) setMetadata({
+      permissions: {
+        ...metadata.permissions,
+        location: isPrecisePositionAllowed
+      }
+    })
+    const precisePosition: IPosition | {} = metadata.permissions.location ? await getPreciseGeolocation() : {}
+    console.log(precisePosition)
+    const position: IExtendedPosition = {
+      ...await getCoarseLocation(),
+      ...precisePosition,
+      isPrecise: !isEqual(precisePosition, {})
+    }
     const userUpdateObject: Partial<IUser> = {}
     const currentTimestamp = Timestamp.now()
     if (currentTimestamp.seconds > metadata.lastSeen.seconds + 60) {
@@ -113,10 +129,7 @@ const App: Component = () => {
       })
       userUpdateObject.lastSeen = currentTimestamp
     }
-    if (
-      metadata.position.lat !== position.lat ||
-      metadata.position.long !== position.long
-    ) {
+    if (!isEqual(metadata.position, position)) {
       setMetadata({
         position
       })
@@ -124,7 +137,7 @@ const App: Component = () => {
     }
     if (
       userUpdateObject &&
-      Object.keys(userUpdateObject).length === 0 &&
+      Object.keys(userUpdateObject).length !== 0 &&
       Object.getPrototypeOf(userUpdateObject) === Object.prototype
     ) await updateFirestoreUser(userUpdateObject)
   })

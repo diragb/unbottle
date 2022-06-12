@@ -9,6 +9,22 @@ export interface IPosition {
   long: number
 }
 
+export interface ICountry {
+  name: string
+  code: string
+}
+
+export interface IRegion {
+  name: string
+  code: string
+}
+
+export interface IExtendedPosition extends IPosition {
+  country: ICountry
+  region: IRegion
+  isPrecise: boolean
+}
+
 export interface IMood {
   icon: string
   name: string
@@ -55,7 +71,7 @@ export interface IMetadata {
   theme: THEME
   isSigningIn: boolean
   isSignedIn: boolean
-  position: IPosition
+  position: IExtendedPosition
   entriesRead: string[]
   lastSeen: Timestamp
   didShowIntroductionCard: boolean
@@ -65,7 +81,7 @@ export interface IMetadata {
 export interface IUser {
   username: string
   email: string
-  position: IPosition
+  position: IExtendedPosition
   lastSeen: Timestamp
   entries: number | FieldValue
 }
