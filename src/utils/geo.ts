@@ -1,5 +1,9 @@
 // Constants:
-import { DEGREE_METRIC_EQUIVALENT, NULL_ISLAND_POSITION, R } from '../constants/geo'
+import {
+  DEGREE_METRIC_EQUIVALENT,
+  NULL_ISLAND_POSITION,
+  R
+} from '../constants/geo'
 import { IExtendedPosition, IPosition } from '../ts/state'
 
 

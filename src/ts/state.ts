@@ -38,7 +38,10 @@ export interface IEntry {
   body: string
   distance: string
   sentiment: number
-  range: { min: number, max: number }
+  range: {
+    min: number
+    max: number
+  }
   hearts: number
   comments: number
   time: Timestamp
@@ -46,7 +49,9 @@ export interface IEntry {
   signature: string
 }
 
-export interface ILocalStorageEntry extends Omit<Omit<Omit<Omit<IEntry, 'mood'>, 'time'>, 'position'>, 'signature'> {
+export interface ILocalStorageEntry extends Omit<
+  IEntry, 'mood' | 'time' | 'position' | 'signature' | 'hearts' | 'comments' | 'views'
+> {
   stage: number
   time?: Timestamp
   mood?: IMood
@@ -63,7 +68,7 @@ export interface IPreviewEntry {
 }
 
 export interface IPermissions {
-  cookies: boolean,
+  cookies: boolean
   location: boolean
 }
 

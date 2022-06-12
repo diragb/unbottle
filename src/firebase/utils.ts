@@ -14,7 +14,8 @@ import { getAuth } from 'firebase/auth'
 import {
   get,
   ref,
-  set
+  set,
+  increment
 } from 'firebase/database'
 import date from 'date-and-time'
 import ordinal from 'date-and-time/plugin/ordinal'
@@ -85,3 +86,8 @@ export const firestoreTimeToReadable = (seconds?: number) => {
 }
 
 export const isUsernameTaken = async (username: string) => (await get(ref(DATABASE.REALTIME, `users/${ username }`))).exists()
+
+export const handleEntryRead = async (entryID: string, localEntriesRead: string[]) => {
+  if (localEntriesRead.includes(entryID)) return
+  await set(ref(DATABASE.REALTIME, `entries/${ entryID }/views`), increment(1))
+}

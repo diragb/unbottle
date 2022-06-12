@@ -117,9 +117,7 @@ const Write: Component = () => {
 		body: '',
     distance: '10',
     sentiment: 0,
-    range: { min: 0, max: 0 },
-    hearts: 0,
-    comments: 0
+    range: { min: 0, max: 0 }
   }
   const metadata: IMetadata = useRouteData()
   const sentiment = new Sentiment()

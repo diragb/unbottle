@@ -58,6 +58,7 @@ import {
   ErrorSection,
   LoadMore
 } from './styles'
+import { handleEntryRead } from '../../../firebase/utils'
 
 
 // Functions:
@@ -116,6 +117,7 @@ const Read: Component = () => {
     }
     if (entriesQueryCursor().greaterThan) entryQueryConstraints.greaterThan.push(startAfter(entriesQueryCursor().greaterThan))
     if (entriesQueryCursor().lessThan) entryQueryConstraints.lessThan.push(startAfter(entriesQueryCursor().lessThan))
+    
     const greaterThanEntries = await getDocs(query(entriesRef, ...entryQueryConstraints.greaterThan))
     const lessThanEntries = await getDocs(query(entriesRef, ...entryQueryConstraints.lessThan))
     const newEntriesQueryCursor: {
@@ -143,6 +145,7 @@ const Read: Component = () => {
       else {
         const currentID = entries()[ newEntries.findIndex(entry => entry.id === filteredFetchedEntries[0].id) ].id
         history.pushState({}, '', `${ ROUTES.AUTH.READ }/${ currentID }`)
+        for (const entry of newEntries) handleEntryRead(entry.id, metadata.entriesRead)
         if (!metadata.entriesRead.includes(currentID)) setMetadata({
           entriesRead: metadata.entriesRead.concat(currentID)
         })
