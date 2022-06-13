@@ -11,7 +11,11 @@ import { Routes, Route } from 'solid-app-router'
 import { updateFirestoreUser } from './firebase/utils'
 import { Timestamp } from 'firebase/firestore'
 import Color from 'color'
-import { getCoarseLocation, getGeolocationPermissionStatus, getPreciseGeolocation } from './utils/geo'
+import {
+  getCoarseLocation,
+  getGeolocationPermissionStatus,
+  getPreciseGeolocation
+} from './utils/geo'
 import isEqual from 'lodash.isequal'
 
 

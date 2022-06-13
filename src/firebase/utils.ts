@@ -8,6 +8,7 @@ import {
   orderBy,
   query,
   setDoc,
+  Timestamp,
   updateDoc
 } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
@@ -32,7 +33,8 @@ import { DATABASE } from './'
 
 // Exports:
 export const DEFAULT_FIRESTORE_USER = {
-  entries: 0
+  entries: 0,
+  lastSeen: Timestamp.now()
 }
 
 export const updateFirestoreUser = async (newUser?: Partial<IUser>) => {
